@@ -1,0 +1,49 @@
+Listed below are the licenses for all the data used in our submissions and the relevant links:
+
+Statistics Canada:
+
+- Statistics Canada provides an Open License, the text of which can be viewed at the link below:
+
+	https://www.statcan.gc.ca/en/reference/licence
+
+
+
+
+
+-----------------------------------------------------------------------------------------------------------------
+
+US Bureau of Economic Analysis:
+
+- The BEA makes reference to no specific license but posts it's support of Open Data (see link below)
+
+	https://www.bea.gov/open-data
+
+-----------------------------------------------------------------------------------------------------------------
+
+Statistisk sentralbyrå:
+
+- Statistics Norway provides a license under the Creative Commons Attribution 4.0 International which allows users to copy, redistribute, and adapt the material for any purpose. The license can be viewed at the link provided
+
+	https://www.ssb.no/en/diverse/lisens
+
+
+-----------------------------------------------------------------------------------------------------------------
+
+OECD:
+
+- The OECD provides a Terms and Conditions statement which can be viewed at the link provided
+
+	https://www.oecd.org/termsandconditions/
+
+
+-----------------------------------------------------------------------------------------------------------------
+
+Penn World Tables:
+
+- The Penn World Table provides a license under the Creative Commons Attribution 4.0 International. The license can be viewed at the link provided
+
+	https://www.rug.nl/ggdc/productivity/pwt/?lang=en
+
+- The Penn World Table also requires the following attribution (included in the references and the README file)
+
+	Feenstra, Robert C., Robert Inklaar and Marcel P. Timmer (2015), "The Next Generation of the Penn World Table" American Economic Review, 105(10), 3150-3182, available for download at www.ggdc.net/pwt
