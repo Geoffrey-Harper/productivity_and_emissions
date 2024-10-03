@@ -1,0 +1,97 @@
+---
+title: "Replication
+author: "David Weaver"
+date: "2024-10-03"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+
+# Packages
+library(cansim)
+library(tidyverse)
+
+# Read Data
+nonres_k <- cansim::get_cansim("36-10-0096-01")
+gdp_prod_lab <- cansim::get_cansim("36-10-0208-01")
+gdp_prod_lab_subsec <- cansim::get_cansim("36-10-0217-01")
+
+```
+
+```{r Data Cleaning}
+
+gdp_prod_lab_clean <- gdp_prod_lab %>% 
+  select(Year = REF_DATE,
+         Region = GEO, 
+         Variable = `Multifactor productivity and related variables`,
+         Hierarchy_industry = `Hierarchy for North American Industry Classification System (NAICS)`,
+         Industry = `North American Industry Classification System (NAICS)`,
+         Value = VALUE)
+
+
+gdp_prod_lab_subsec_clean <- gdp_prod_lab_subsec %>% 
+  select(Year = REF_DATE,
+         Region = GEO, 
+         Variable = `Multifactor productivity and related variables`,
+         Hierarchy_industry = `Hierarchy for North American Industry Classification System (NAICS)`,
+         Industry = `North American Industry Classification System (NAICS)`,
+         Value = VALUE)
+
+```
+
+
+```{r Capital Replication Frames}
+
+replicated_k <- nonres_k %>% 
+  filter(GEO == "Canada", # start with just canada
+         Assets == "Total non-residential", # Only need agg non-res
+         Prices %in%  c("Current prices", "Chained (2017) dollars"), # they use a different Real GDP based on OECD ???
+         `Flows and stocks` %in% c("Investment", "Geometric depreciation",
+                                   "Geometric end-year net stock")) %>% 
+  filter(as.numeric(substr(`Hierarchy for Industry`,1,3)) < 1.5) %>% # exclude NPISH and Government. ONLY BUSINESS SECTOR.
+  select(GEO, REF_DATE, Prices, Assets, Industry, Identity = `Flows and stocks`, VALUE) %>%
+  pivot_wider(names_from = Identity, values_from = VALUE) %>%
+  mutate(K_it = `Geometric end-year net stock` + `Geometric depreciation` - Investment)
+  
+```
+
+
+```{r A, Y, L, WxL, Replication}
+
+accounts_mainsectors <-  gdp_prod_lab_clean %>%
+  filter(Region == "Canada",
+         Variable %in% c("Multifactor productivity", 
+                         "Real gross domestic product (GDP)",
+                         "Gross domestic product (GDP)", 
+                         "Hours worked","Labour compensation"),
+         as.numeric(Hierarchy_industry) < 2) %>% # ignore special aggregates 
+  pivot_wider(names_from =  Variable, values_from = Value) %>%
+  rename(A = `Multifactor productivity`,
+         nY = `Gross domestic product (GDP)`,
+         rY = `Real gross domestic product (GDP)`, # note, these are 2012 constant. 
+         L = `Hours worked`,
+         wL = `Labour compensation`)
+accounts %>% view()
+
+
+# NEEDS TO BE BROKEN DOWN FURTHER BY SUBSECTOR IN 36-10-0217-01
+# NOTE: subsectors include non-business sector.
+accounts_subsectors <-  gdp_prod_lab_subsec_clean %>%
+  filter(Region == "Canada",
+         Variable %in% c("Multifactor productivity", 
+                         "Real gross domestic product (GDP)",
+                         "Gross domestic product (GDP)", 
+                         "Hours worked","Labour compensation")) %>% # ignore special aggregates 
+  pivot_wider(names_from =  Variable, values_from = Value) %>%
+  rename(A = `Multifactor productivity`,
+         nY = `Gross domestic product (GDP)`,
+         rY = `Real gross domestic product (GDP)`, # note, these are 2012 constant. 
+         L = `Hours worked`,
+         wL = `Labour compensation`)
+
+```
+
+
+
+
+
